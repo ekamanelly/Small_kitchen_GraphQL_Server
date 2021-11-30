@@ -1,5 +1,6 @@
-console.log("google");
 import dotenv from "dotenv";
+dotenv.config();
+
 import "reflect-metadata";
 import express from "express";
 import { buildSchema } from "type-graphql";
@@ -10,6 +11,7 @@ import {
   ApolloServerPluginLandingPageProductionDefault,
 } from "apollo-server-core";
 import { resolvers } from "./resolvers";
+import { connectDB } from "./dbConnection/mongobd";
 
 const port = 4000;
 async function createServer() {
@@ -38,6 +40,8 @@ async function createServer() {
   // apply middleware to server
   server.applyMiddleware({ app });
   app.listen(port, () => console.log("app connect to port " + port));
+  // connect db
+  connectDB();
 }
 
 createServer();
