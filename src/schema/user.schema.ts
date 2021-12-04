@@ -1,7 +1,16 @@
 import { Field, InputType, ObjectType } from "type-graphql";
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, prop, pre } from "@typegoose/typegoose";
 import { IsEmail, maxLength, MaxLength, MinLength } from "class-validator";
+import bcrypt from "bcrypt";
 
+@pre<User>("save", async function () {
+  if (!this.isModified("password")) {
+    return;
+  }
+  const salt = await bcrypt.genSalt(10);
+  const hash = bcrypt.hashSync(this.password, salt);
+  this.password = hash;
+})
 @ObjectType()
 export class User {
   @Field(() => String)
@@ -16,7 +25,7 @@ export class User {
   email: String;
 
   @prop({ required: true })
-  password: String;
+  password: string;
 }
 
 export const userModel = getModelForClass(User);
