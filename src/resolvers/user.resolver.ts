@@ -10,6 +10,7 @@ export default class UserResolver {
   createUser(@Arg("input") input: CreateUserInput) {
     return this.userService.createUser(input);
   }
+
   @Query(() => User)
   me() {
     return {
